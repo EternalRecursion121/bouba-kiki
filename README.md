@@ -11,20 +11,22 @@ according to Google's `gemini-embedding-2`.
    thorn, porcupine, staccato, …). Both lists deliberately mix pleasant and unpleasant items so the axis
    doesn't learn "safe vs dangerous".
 3. **Axis** = `unit( unit(mean bouba − mean kiki) + 0.5 · unit(bouba − kiki) )`.
-4. **Position.** Each word is projected onto the axis and scaled so the word "kiki" sits at **0** and "bouba"
-   at **100** (clipped; 5% of the list words fall outside). An ordinary word lands around 40–50.
-   Examples: needle 7, takete 12, cactus 36, Tuesday 46, table 50, maluma 58, marshmallow 68.
+4. **Position.** Each word is projected onto the axis and placed on a 0–100 scale in two linear pieces:
+   the word "kiki" sits at **0**, the divide between the bouba and kiki lists at **50**, and the word "bouba"
+   at **100** (clipped; 5% of the list words fall outside). Below 50 is the kiki side, above is bouba.
+   Examples: needle 10, takete 16, cactus 48, Tuesday 57, table 60, maluma 66, marshmallow 75.
+   An ordinary word lands near the middle (median of a 779-word general vocabulary: 53).
 
 | check | result |
 |---|---|
-| 5-fold cross-validated accuracy on the word lists (bouba vs kiki side) | 96.9% |
+| 5-fold cross-validated accuracy: held-out list words on the right side of 50 | 95.0% |
 | `bouba` / `kiki` | 100 / 0 (by construction) |
-| `maluma` / `takete` (never trained on) | 58 / 12 |
+| `maluma` / `takete` (never trained on) | 66 / 16 |
 | cos(axis, positive − negative words) | −0.01 |
 | cos(axis, safe − dangerous words) | +0.13 |
 
-The anchor dose (0.5) was chosen by sweeping it under cross-validation: 0 → 94.6% (and "kiki" scored 36%
-bouba), 0.5 → 96.9%, 3 → 88.5% (the axis drifts toward spelling: b/o/u vs k/i/t).
+The anchor dose (0.5) was chosen by sweeping it under cross-validation (classifier accuracy): 0 → 94.6%
+(and "kiki" scored 36% bouba), 0.5 → 96.9%, 3 → 88.5% (the axis drifts toward spelling: b/o/u vs k/i/t).
 
 `scripts/build_iterative.py` is an experiment that grows the clusters from the seed pair by repeatedly
 recruiting the most bouba/kiki words from new batches and pruning misfits. It held out worse in every
