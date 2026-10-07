@@ -1,0 +1,9 @@
+{
+  "name": "bouba-kiki",
+  "private": true,
+  "type": "module",
+  "description": "Is a word bouba or kiki? Scored with gemini-embedding-2.",
+  "scripts": {
+    "test": "node scripts/test_api.mjs"
+  }
+}

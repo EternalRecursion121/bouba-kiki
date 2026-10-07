@@ -1,0 +1,611 @@
+{
+ "bouba": [
+  "balloon",
+  "pillow",
+  "cushion",
+  "bubble",
+  "marshmallow",
+  "blob",
+  "sponge",
+  "cotton ball",
+  "pom-pom",
+  "yoga ball",
+  "dumpling",
+  "donut",
+  "bagel",
+  "boulder",
+  "cannonball",
+  "bowling ball",
+  "bomb",
+  "mushroom",
+  "jelly",
+  "pudding",
+  "custard",
+  "dough",
+  "mochi",
+  "bun",
+  "meatball",
+  "peach",
+  "plum",
+  "melon",
+  "potato",
+  "egg",
+  "olive",
+  "pearl",
+  "bead",
+  "marble",
+  "moon",
+  "planet",
+  "cloud",
+  "puddle",
+  "raindrop",
+  "dune",
+  "hill",
+  "igloo",
+  "dome",
+  "cauldron",
+  "kettle",
+  "teapot",
+  "jar",
+  "barrel",
+  "blanket",
+  "duvet",
+  "mattress",
+  "quilt",
+  "mitten",
+  "slipper",
+  "teddy bear",
+  "hippo",
+  "walrus",
+  "manatee",
+  "seal",
+  "panda",
+  "koala",
+  "hamster",
+  "blobfish",
+  "octopus",
+  "whale",
+  "snail",
+  "toad",
+  "pufferfish",
+  "sheep",
+  "bumblebee",
+  "bear",
+  "elephant",
+  "round",
+  "rounded",
+  "soft",
+  "chubby",
+  "squishy",
+  "puffy",
+  "smooth",
+  "bulbous",
+  "pillowy",
+  "gooey",
+  "mushy",
+  "blobby",
+  "flabby",
+  "mellow",
+  "gentle",
+  "drowsy",
+  "cozy",
+  "hum",
+  "gong",
+  "cello",
+  "lullaby",
+  "bass",
+  "hug",
+  "mold",
+  "swamp",
+  "bog",
+  "lump",
+  "float",
+  "brownie",
+  "foam",
+  "cotton",
+  "brown",
+  "rubber",
+  "oatmeal",
+  "buffalo",
+  "gourd",
+  "couch",
+  "Bob",
+  "doll",
+  "marbles",
+  "cow",
+  "sofa",
+  "bulldozer",
+  "Bubbles",
+  "pillowcase",
+  "butter",
+  "ocean",
+  "balloon animal",
+  "porridge",
+  "champagne",
+  "bulbo",
+  "pond",
+  "gorilla",
+  "house",
+  "marble slab"
+ ],
+ "kiki": [
+  "crystal",
+  "icicle",
+  "zigzag",
+  "lightning bolt",
+  "spark",
+  "sparkler",
+  "tinsel",
+  "pinwheel",
+  "arrowhead",
+  "arrow",
+  "dart",
+  "pin",
+  "needle",
+  "thumbtack",
+  "staple",
+  "fork",
+  "razor",
+  "scissors",
+  "splinter",
+  "barbed wire",
+  "spike",
+  "nettle",
+  "holly",
+  "pine needle",
+  "thistle",
+  "burr",
+  "horn",
+  "beak",
+  "claw",
+  "icepick",
+  "dagger",
+  "tiara",
+  "spire",
+  "steeple",
+  "crag",
+  "cliff",
+  "barracuda",
+  "cricket",
+  "sharp",
+  "spiky",
+  "pointy",
+  "angular",
+  "thorny",
+  "bristly",
+  "crisp",
+  "crunchy",
+  "craggy",
+  "serrated",
+  "barbed",
+  "pointed",
+  "edgy",
+  "zippy",
+  "twitchy",
+  "jittery",
+  "staccato",
+  "tinny",
+  "fizzy",
+  "zesty",
+  "snappy",
+  "click",
+  "tick",
+  "clink",
+  "chirp",
+  "squeak",
+  "whistle",
+  "snap",
+  "crackle",
+  "piccolo",
+  "triangle chime",
+  "hi-hat",
+  "violin pizzicato",
+  "sneeze",
+  "pitchfork",
+  "trident",
+  "glass shard",
+  "snick",
+  "Pip",
+  "krix",
+  "pickaxe",
+  "corkscrew",
+  "pierce",
+  "tazzik",
+  "skritch",
+  "zigzagging",
+  "whisk",
+  "sparkle",
+  "glint",
+  "Kiko",
+  "kittak",
+  "sickle",
+  "hiss",
+  "scythe",
+  "Spike",
+  "tzik",
+  "flick",
+  "sprint",
+  "pinch",
+  "Ziggy",
+  "Zack",
+  "kick",
+  "pliktik"
+ ],
+ "log": [
+  {
+   "round": 1,
+   "n_bouba": 104,
+   "n_kiki": 97,
+   "cos_seed": 0.5795625065184592,
+   "added_bouba": [
+    "lump",
+    "float",
+    "brownie"
+   ],
+   "added_kiki": [
+    "pitchfork",
+    "trident",
+    "glass shard",
+    "scratch"
+   ],
+   "pruned": [
+    "wrecking ball",
+    "dewdrop",
+    "yawn",
+    "origami",
+    "gem",
+    "cactus",
+    "glacier",
+    "mosquito",
+    "narwhal",
+    "lobster",
+    "crab",
+    "lizard",
+    "xylophone"
+   ]
+  },
+  {
+   "round": 2,
+   "n_bouba": 106,
+   "n_kiki": 95,
+   "cos_seed": 0.5818067449010563,
+   "added_bouba": [
+    "foam",
+    "cotton"
+   ],
+   "added_kiki": [
+    "snick",
+    "Pip",
+    "rake",
+    "bat stick"
+   ],
+   "pruned": [
+    "pyramid",
+    "diamond",
+    "pencil",
+    "skyscraper"
+   ]
+  },
+  {
+   "round": 3,
+   "n_bouba": 107,
+   "n_kiki": 96,
+   "cos_seed": 0.5867050231291999,
+   "added_bouba": [
+    "brown",
+    "rubber"
+   ],
+   "added_kiki": [
+    "krix",
+    "pickaxe",
+    "pliktik",
+    "stab"
+   ],
+   "pruned": [
+    "murmur",
+    "star"
+   ]
+  },
+  {
+   "round": 4,
+   "n_bouba": 110,
+   "n_kiki": 97,
+   "cos_seed": 0.587829521991542,
+   "added_bouba": [
+    "oatmeal",
+    "buffalo",
+    "gourd"
+   ],
+   "added_kiki": [
+    "corkscrew",
+    "pierce",
+    "tazzik",
+    "horn honk",
+    "kick"
+   ],
+   "pruned": [
+    "glitter",
+    "hummingbird"
+   ]
+  },
+  {
+   "round": 5,
+   "n_bouba": 114,
+   "n_kiki": 100,
+   "cos_seed": 0.5929972900913849,
+   "added_bouba": [
+    "couch",
+    "Bob",
+    "doll",
+    "marbles",
+    "bloop",
+    "marble slab",
+    "gravy",
+    "bulb"
+   ],
+   "added_kiki": [
+    "skritch",
+    "zigzagging",
+    "whisk",
+    "sparkle"
+   ],
+   "pruned": [
+    "comb"
+   ]
+  },
+  {
+   "round": 6,
+   "n_bouba": 115,
+   "n_kiki": 101,
+   "cos_seed": 0.5929857920506384,
+   "added_bouba": [
+    "cow",
+    "fat",
+    "yogurt",
+    "rubber duck",
+    "mouse pad",
+    "hot air balloon",
+    "loaf",
+    "house"
+   ],
+   "added_kiki": [
+    "glint"
+   ],
+   "pruned": []
+  },
+  {
+   "round": 7,
+   "n_bouba": 118,
+   "n_kiki": 103,
+   "cos_seed": 0.6037847598957766,
+   "added_bouba": [
+    "sofa",
+    "bulldozer",
+    "Bubbles",
+    "pillowcase",
+    "hoodie",
+    "pancake"
+   ],
+   "added_kiki": [
+    "Kiko",
+    "kittak",
+    "sickle",
+    "hiss"
+   ],
+   "pruned": [
+    "sluggish",
+    "snowflake",
+    "nail"
+   ]
+  },
+  {
+   "round": 8,
+   "n_bouba": 118,
+   "n_kiki": 103,
+   "cos_seed": 0.6021468475384709,
+   "added_bouba": [
+    "butter"
+   ],
+   "added_kiki": [
+    "scythe"
+   ],
+   "pruned": [
+    "fuzzy",
+    "pine cone"
+   ]
+  },
+  {
+   "round": 9,
+   "n_bouba": 122,
+   "n_kiki": 103,
+   "cos_seed": 0.6012545926663744,
+   "added_bouba": [
+    "ocean",
+    "balloon animal",
+    "porridge",
+    "champagne"
+   ],
+   "added_kiki": [
+    "Spike",
+    "tzik",
+    "flick",
+    "sprint"
+   ],
+   "pruned": [
+    "compass",
+    "hedgehog",
+    "sea urchin",
+    "stegosaurus"
+   ]
+  },
+  {
+   "round": 10,
+   "n_bouba": 124,
+   "n_kiki": 101,
+   "cos_seed": 0.6047124867087275,
+   "added_bouba": [
+    "bulbo",
+    "pond",
+    "oobla",
+    "puppy",
+    "desert"
+   ],
+   "added_kiki": [
+    "pinch",
+    "Ziggy"
+   ],
+   "pruned": [
+    "sword",
+    "mountain peak",
+    "stalagmite",
+    "heron"
+   ]
+  },
+  {
+   "round": 11,
+   "n_bouba": 124,
+   "n_kiki": 100,
+   "cos_seed": 0.6044633583644405,
+   "added_bouba": [
+    "desert",
+    "hoodie"
+   ],
+   "added_kiki": [],
+   "pruned": [
+    "porcupine"
+   ]
+  },
+  {
+   "round": 12,
+   "n_bouba": 125,
+   "n_kiki": 101,
+   "cos_seed": 0.6038502736874929,
+   "added_bouba": [
+    "gorilla"
+   ],
+   "added_kiki": [
+    "Zack"
+   ],
+   "pruned": []
+  },
+  {
+   "round": 13,
+   "n_bouba": 125,
+   "n_kiki": 101,
+   "cos_seed": 0.6038502736874929,
+   "added_bouba": [
+    "yogurt",
+    "rubber duck",
+    "owl",
+    "mosque"
+   ],
+   "added_kiki": [],
+   "pruned": []
+  },
+  {
+   "round": 14,
+   "n_bouba": 125,
+   "n_kiki": 101,
+   "cos_seed": 0.6038502736874929,
+   "added_bouba": [
+    "capybara",
+    "dolphin",
+    "noodle soup"
+   ],
+   "added_kiki": [],
+   "pruned": []
+  },
+  {
+   "round": 15,
+   "n_bouba": 126,
+   "n_kiki": 101,
+   "cos_seed": 0.6058566704010501,
+   "added_bouba": [
+    "house",
+    "dog",
+    "eggplant",
+    "bread",
+    "fat"
+   ],
+   "added_kiki": [
+    "kick"
+   ],
+   "pruned": [
+    "stag beetle"
+   ]
+  },
+  {
+   "round": 16,
+   "n_bouba": 126,
+   "n_kiki": 101,
+   "cos_seed": 0.6058566704010501,
+   "added_bouba": [
+    "hot air balloon",
+    "boat",
+    "banana"
+   ],
+   "added_kiki": [],
+   "pruned": []
+  },
+  {
+   "round": 17,
+   "n_bouba": 127,
+   "n_kiki": 101,
+   "cos_seed": 0.6063007933929254,
+   "added_bouba": [
+    "marble slab",
+    "cake",
+    "bulb",
+    "salmon"
+   ],
+   "added_kiki": [
+    "pliktik"
+   ],
+   "pruned": [
+    "knife"
+   ]
+  },
+  {
+   "round": 18,
+   "n_bouba": 127,
+   "n_kiki": 101,
+   "cos_seed": 0.6063007933929254,
+   "added_bouba": [
+    "ice cream",
+    "coat",
+    "bus",
+    "mouse pad"
+   ],
+   "added_kiki": [],
+   "pruned": []
+  },
+  {
+   "round": 19,
+   "n_bouba": 127,
+   "n_kiki": 101,
+   "cos_seed": 0.6063007933929254,
+   "added_bouba": [
+    "pancake",
+    "sweater"
+   ],
+   "added_kiki": [],
+   "pruned": []
+  },
+  {
+   "round": 20,
+   "n_bouba": 127,
+   "n_kiki": 101,
+   "cos_seed": 0.6063007933929254,
+   "added_bouba": [
+    "dinosaur",
+    "puppy",
+    "table lamp",
+    "duck",
+    "vase",
+    "oobla"
+   ],
+   "added_kiki": [],
+   "pruned": []
+  }
+ ]
+}

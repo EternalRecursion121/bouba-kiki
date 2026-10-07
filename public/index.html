@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bouba or Kiki</title>
+<meta name="description" content="Type any word and see how bouba or kiki it is, scored with an embedding model.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2l3.5 9.5L29 9l-6 8 6 8-9.5-2.5L16 32l-3.5-9.5L3 25l6-8-6-8 9.5 2.5z' fill='%23F0452A'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Chakra+Petch:wght@500;700&family=Hanken+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F1F2F6;
+    --ink: #1A1C27;
+    --muted: #666A7D;
+    --line: #D5D7E1;
+    --bouba: #6C68EE;
+    --kiki: #F0452A;
+    --field: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #16171F; --ink: #ECEDF3; --muted: #9A9DB0; --line: #2E3040;
+      --bouba: #8E8BFF; --kiki: #FF5E42; --field: #1F2029;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #16171F; --ink: #ECEDF3; --muted: #9A9DB0; --line: #2E3040;
+    --bouba: #8E8BFF; --kiki: #FF5E42; --field: #1F2029;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 1rem/1.55 "Hanken Grotesk", system-ui, sans-serif;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 1rem 2rem;
+  }
+  main { width: 100%; max-width: 34rem; display: flex; flex-direction: column; align-items: center; flex: 1; }
+
+  h1 { margin: 0; font-size: 1.25rem; font-weight: 500; letter-spacing: 0; }
+  h1 .b { font-family: "Baloo 2", sans-serif; font-weight: 700; color: var(--bouba); }
+  h1 .k { font-family: "Chakra Petch", sans-serif; font-weight: 700; color: var(--kiki); }
+  h1 .or { color: var(--muted); font-size: 0.95rem; margin: 0 0.15em; }
+
+  .stage { width: min(78vw, 20rem); aspect-ratio: 1; margin: 1.75rem 0 0.5rem; }
+  .stage svg { width: 100%; height: 100%; display: block; overflow: visible; }
+
+  .word {
+    font-size: clamp(2.2rem, 9vw, 3.4rem);
+    line-height: 1.1;
+    margin: 0;
+    min-height: 1.1em;
+    text-align: center;
+    overflow-wrap: anywhere;
+    transition: color 0.5s;
+  }
+  .word.is-bouba { font-family: "Baloo 2", sans-serif; font-weight: 700; }
+  .word.is-kiki { font-family: "Chakra Petch", sans-serif; font-weight: 700; }
+
+  .verdict { margin: 0.35rem 0 1.4rem; font-size: 1.05rem; color: var(--muted); min-height: 1.6em; text-align: center; }
+  .verdict strong { color: var(--ink); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+  .scale { width: 100%; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.75rem; }
+  .scale .end-b { font-family: "Baloo 2", sans-serif; font-weight: 700; color: var(--bouba); }
+  .scale .end-k { font-family: "Chakra Petch", sans-serif; font-weight: 700; color: var(--kiki); }
+  .track { position: relative; height: 2px; background: var(--line); }
+  .marker {
+    position: absolute; top: 50%; left: 50%;
+    width: 14px; height: 14px; margin: -7px 0 0 -7px;
+    background: var(--ink); border-radius: 50%;
+    transition: left 0.7s cubic-bezier(.2,.8,.2,1), border-radius 0.7s;
+    opacity: 0;
+  }
+  .marker.on { opacity: 1; }
+
+  form { width: 100%; display: flex; gap: 0.5rem; margin-top: 2rem; }
+  input {
+    flex: 1; min-width: 0;
+    font: inherit; font-size: 1.1rem;
+    color: var(--ink); background: var(--field);
+    border: 1.5px solid var(--line); border-radius: 999px;
+    padding: 0.7rem 1.1rem;
+  }
+  input::placeholder { color: var(--muted); }
+  button {
+    font: inherit; font-weight: 500; font-size: 1rem;
+    color: var(--paper); background: var(--ink);
+    border: 0; border-radius: 999px; padding: 0 1.3rem; cursor: pointer;
+  }
+  button:disabled { opacity: 0.55; cursor: progress; }
+  input:focus-visible, button:focus-visible { outline: 2px solid var(--bouba); outline-offset: 2px; }
+
+  .tries { margin: 0.9rem 0 0; font-size: 0.92rem; color: var(--muted); text-align: center; }
+  .tries button {
+    background: none; color: var(--ink); padding: 0; border-radius: 0;
+    font-size: inherit; font-weight: 400; text-decoration: underline; text-decoration-color: var(--line);
+    text-underline-offset: 3px; margin: 0 0.2em;
+  }
+  .tries button:hover { text-decoration-color: currentColor; }
+
+  .error { color: var(--kiki); min-height: 1.5em; margin: 0.6rem 0 0; font-size: 0.95rem; text-align: center; }
+
+  footer { max-width: 34rem; margin-top: 2.5rem; font-size: 0.85rem; color: var(--muted); text-align: center; line-height: 1.6; }
+  footer a { color: inherit; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marker, .word { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1><span class="b">bouba</span><span class="or">or</span><span class="k">kiki</span></h1>
+
+  <div class="stage" aria-hidden="true">
+    <svg viewBox="-110 -110 220 220"><path id="shape"></path></svg>
+  </div>
+
+  <p class="word" id="word" aria-live="polite"></p>
+  <p class="verdict" id="verdict">Type a word to see which way it leans.</p>
+
+  <div class="scale" aria-hidden="true">
+    <span class="end-b">bouba</span>
+    <div class="track"><div class="marker" id="marker"></div></div>
+    <span class="end-k">kiki</span>
+  </div>
+
+  <form id="form" autocomplete="off">
+    <label for="q" class="visually-hidden" style="position:absolute;left:-9999px">Word</label>
+    <input id="q" name="q" maxlength="40" placeholder="Try any word" required>
+    <button id="go" type="submit">Score</button>
+  </form>
+  <p class="error" id="error" role="alert"></p>
+  <p class="tries">Or try
+    <button type="button">maluma</button>
+    <button type="button">takete</button>
+    <button type="button">marshmallow</button>
+    <button type="button">lightning</button>
+    <button type="button">Tuesday</button>
+  </p>
+</main>
+
+<footer>
+  Each word is embedded with Google's gemini-embedding-2 and projected onto an axis anchored on
+  the words “bouba” and “kiki”, sharpened by 130 round, soft things and 130 sharp, spiky ones.
+  The percentage is a classifier's probability: it sorts held-out words correctly 97% of the time.
+  It scores what the model associates with a word, which is not the same as how it sounds.
+</footer>
+
+<script>
+  const path = document.getElementById("shape");
+  const wordEl = document.getElementById("word");
+  const verdict = document.getElementById("verdict");
+  const marker = document.getElementById("marker");
+  const errorEl = document.getElementById("error");
+  const input = document.getElementById("q");
+  const go = document.getElementById("go");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const css = getComputedStyle(document.documentElement);
+
+  // t = 0 is pure bouba (smooth blob), t = 1 is pure kiki (sharp star).
+  const N = 360, SPIKES = 11, R = 82;
+  function radius(theta, t) {
+    const blob = R * (1 + 0.07 * Math.sin(3 * theta + 0.6) + 0.045 * Math.sin(5 * theta + 2.1) + 0.03 * Math.sin(2 * theta));
+    return (1 - t) * blob + t * starRadius(theta);
+  }
+  // Distance from the centre to a star polygon with straight edges, along the ray at angle theta.
+  const OUT = R * 1.08, IN = R * 0.5, SEG = Math.PI / SPIKES;   // tip-to-valley half-sector
+  function starRadius(theta) {
+    const u = ((theta % (2 * SEG)) + 2 * SEG) % (2 * SEG);       // angle within one tip→valley→tip sector
+    const [a0, r0, a1, r1] = u < SEG ? [0, OUT, SEG, IN] : [SEG, IN, 2 * SEG, OUT];
+    const [x0, y0, x1, y1] = [r0 * Math.cos(a0), r0 * Math.sin(a0), r1 * Math.cos(a1), r1 * Math.sin(a1)];
+    const [dx, dy] = [Math.cos(u), Math.sin(u)];
+    // intersect ray (dx, dy)·s with segment p0→p1
+    return (x0 * (y1 - y0) - y0 * (x1 - x0)) / (dx * (y1 - y0) - dy * (x1 - x0));
+  }
+  function draw(t) {
+    let d = "";
+    for (let i = 0; i < N; i++) {
+      const th = (i / N) * 2 * Math.PI - Math.PI / 2;
+      const r = radius(th, t);
+      d += (i ? "L" : "M") + (r * Math.cos(th)).toFixed(2) + " " + (r * Math.sin(th)).toFixed(2);
+    }
+    path.setAttribute("d", d + "Z");
+    path.setAttribute("fill", mix(css.getPropertyValue("--bouba").trim(), css.getPropertyValue("--kiki").trim(), t));
+  }
+  function mix(a, b, t) {
+    const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+    const [x, y] = [p(a), p(b)];
+    return "rgb(" + x.map((v, i) => Math.round(v + (y[i] - v) * t)).join(",") + ")";
+  }
+
+  let current = 0.5, anim;
+  function animateTo(target) {
+    cancelAnimationFrame(anim);
+    if (reduce) { current = target; draw(current); return; }
+    const from = current, start = performance.now(), dur = 700;
+    const step = now => {
+      const k = Math.min(1, (now - start) / dur);
+      const e = 1 - Math.pow(1 - k, 3);
+      current = from + (target - from) * e;
+      draw(current);
+      if (k < 1) anim = requestAnimationFrame(step);
+    };
+    anim = requestAnimationFrame(step);
+  }
+  draw(current);
+
+  function show(word, bouba) {
+    const kiki = 1 - bouba;
+    const isBouba = bouba >= 0.5;
+    wordEl.textContent = word;
+    wordEl.className = "word " + (isBouba ? "is-bouba" : "is-kiki");
+    wordEl.style.color = isBouba ? "var(--bouba)" : "var(--kiki)";
+    const pct = Math.round((isBouba ? bouba : kiki) * 100);
+    verdict.innerHTML = "<strong>" + pct + "%</strong> " + (isBouba ? "bouba" : "kiki");
+    marker.classList.add("on");
+    marker.style.left = (kiki * 100) + "%";
+    marker.style.borderRadius = Math.round(50 * bouba) + "%";
+    animateTo(kiki);
+  }
+
+  async function score(word) {
+    errorEl.textContent = "";
+    go.disabled = true;
+    try {
+      const r = await fetch("/api/score?word=" + encodeURIComponent(word));
+      const body = await r.json().catch(() => ({ error: "The server sent an unreadable response." }));
+      if (!r.ok) throw new Error(body.error || "Scoring failed with status " + r.status + ".");
+      show(body.word, body.bouba);
+      history.replaceState(null, "", "?w=" + encodeURIComponent(body.word));
+    } catch (e) {
+      errorEl.textContent = e.message;
+    } finally {
+      go.disabled = false;
+    }
+  }
+
+  document.getElementById("form").addEventListener("submit", e => {
+    e.preventDefault();
+    const w = input.value.trim();
+    if (w) score(w);
+  });
+  document.querySelectorAll(".tries button").forEach(b => b.addEventListener("click", () => {
+    input.value = b.textContent;
+    score(b.textContent);
+  }));
+  const initial = new URLSearchParams(location.search).get("w");
+  if (initial) { input.value = initial; score(initial); }
+</script>
+</body>
+</html>

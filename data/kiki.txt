@@ -1,0 +1,136 @@
+# Things that feel "kiki": spiky, sharp, angular, jagged, fast, crisp.
+# Deliberately includes harmless/pleasant kiki things to avoid a safe-vs-dangerous confound.
+# objects
+star
+crystal
+snowflake
+icicle
+origami
+triangle
+pyramid
+diamond
+gem
+zigzag
+lightning bolt
+spark
+sparkler
+firework
+glitter
+tinsel
+pinwheel
+paper airplane
+arrowhead
+arrow
+dart
+pin
+needle
+thumbtack
+nail
+staple
+fork
+knife
+razor
+scissors
+saw blade
+shard
+splinter
+broken glass
+barbed wire
+spike
+thorn
+nettle
+cactus
+holly
+pine needle
+pine cone
+thistle
+burr
+antler
+horn
+beak
+claw
+fang
+icepick
+spear
+sword
+dagger
+toothpick
+skewer
+pencil
+compass
+tack
+comb
+crown
+tiara
+spire
+steeple
+skyscraper
+mountain peak
+crag
+cliff
+stalagmite
+quartz
+glacier
+# animals
+porcupine
+hedgehog
+sea urchin
+barracuda
+scorpion
+wasp
+hornet
+mosquito
+stag beetle
+swordfish
+narwhal
+lobster
+crab
+heron
+hummingbird
+cricket
+lizard
+stegosaurus
+# textures, qualities, adjectives
+sharp
+spiky
+pointy
+jagged
+angular
+prickly
+thorny
+spiny
+bristly
+crisp
+crunchy
+brittle
+craggy
+serrated
+barbed
+pointed
+edgy
+zippy
+twitchy
+jittery
+staccato
+shrill
+tinny
+fizzy
+zesty
+tangy
+tart
+snappy
+# sounds, music, misc
+click
+tick
+clink
+chirp
+squeak
+whistle
+snap
+crackle
+piccolo
+xylophone
+triangle chime
+hi-hat
+violin pizzicato
+sneeze

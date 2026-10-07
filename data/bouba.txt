@@ -1,0 +1,136 @@
+# Things that feel "bouba": round, soft, blobby, smooth, slow, mellow.
+# Deliberately includes unpleasant/dangerous bouba things to avoid a safe-vs-dangerous confound.
+# objects
+balloon
+pillow
+cushion
+beanbag
+bubble
+marshmallow
+blob
+sponge
+cotton ball
+pom-pom
+beach ball
+yoga ball
+dumpling
+donut
+bagel
+pebble
+boulder
+cannonball
+bowling ball
+wrecking ball
+bomb
+mushroom
+jelly
+pudding
+custard
+dough
+mochi
+bun
+muffin
+meatball
+blueberry
+grape
+peach
+plum
+melon
+pumpkin
+potato
+egg
+olive
+pearl
+bead
+marble
+globe
+moon
+planet
+cloud
+puddle
+dewdrop
+raindrop
+wave
+dune
+hill
+igloo
+dome
+bowl
+cauldron
+kettle
+teapot
+jar
+barrel
+blanket
+duvet
+mattress
+quilt
+mitten
+slipper
+teddy bear
+plushie
+lava lamp
+# animals
+hippo
+walrus
+manatee
+seal
+panda
+koala
+hamster
+blobfish
+jellyfish
+octopus
+whale
+slug
+snail
+toad
+pufferfish
+sheep
+bumblebee
+bear
+elephant
+# textures, qualities, adjectives
+round
+rounded
+soft
+plump
+chubby
+squishy
+fluffy
+puffy
+fuzzy
+velvety
+smooth
+curvy
+bulbous
+pillowy
+spongy
+gooey
+mushy
+doughy
+lumpy
+blobby
+bloated
+flabby
+sluggish
+mellow
+gentle
+drowsy
+cozy
+muffled
+# sounds, music, misc
+hum
+murmur
+gong
+tuba
+cello
+lullaby
+bass
+mumble
+yawn
+hug
+moldy
+mold
+swamp
+bog
