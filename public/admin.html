@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Bouba or Kiki: Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --paper: #F1F2F6; --ink: #1A1C27; --muted: #666A7D; --line: #D5D7E1; --bouba: #6C68EE; --kiki: #F0452A; --field: #FFFFFF; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --paper: #16171F; --ink: #ECEDF3; --muted: #9A9DB0; --line: #2E3040; --bouba: #8E8BFF; --kiki: #FF5E42; --field: #1F2029; }
+  }
+  :root[data-theme="dark"] { --paper: #16171F; --ink: #ECEDF3; --muted: #9A9DB0; --line: #2E3040; --bouba: #8E8BFF; --kiki: #FF5E42; --field: #1F2029; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 0.95rem/1.5 "Hanken Grotesk", system-ui, sans-serif; padding: 2rem 1rem; }
+  main { max-width: 60rem; margin: 0 auto; }
+  h1 { font-size: 1.3rem; font-weight: 500; margin: 0 0 1.5rem; }
+  h2 { font-size: 1.05rem; font-weight: 500; margin: 2rem 0 0.6rem; }
+  input, button { font: inherit; color: var(--ink); }
+  input { background: var(--field); border: 1.5px solid var(--line); border-radius: 0.5rem; padding: 0.45rem 0.7rem; width: min(100%, 26rem); }
+  button { background: var(--field); border: 1.5px solid var(--line); border-radius: 0.5rem; padding: 0.4rem 0.8rem; cursor: pointer; }
+  button:hover { border-color: var(--ink); }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--bouba); outline-offset: 2px; }
+  .row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: 0.75rem; }
+  .stat { background: var(--field); border: 1.5px solid var(--line); border-radius: 0.75rem; padding: 0.7rem 0.9rem; }
+  .stat b { display: block; font-size: 1.4rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .stat span { color: var(--muted); font-size: 0.85rem; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { color: var(--muted); font-weight: 500; }
+  td.word { white-space: normal; }
+  .approved { color: var(--bouba); } .blocked { color: var(--kiki); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .msg { color: var(--muted); min-height: 1.5em; }
+  @media (max-width: 40rem) { .cols { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>bouba or kiki: admin</h1>
+  <form class="row" id="login">
+    <label for="token" style="position:absolute;left:-9999px">Admin token</label>
+    <input id="token" type="password" placeholder="Admin token" autocomplete="current-password">
+    <button type="submit">Load</button>
+    <button type="button" id="recompute">Recompute crowd scores</button>
+    <button type="button" id="export">Export CSV</button>
+  </form>
+  <p class="msg" id="msg"></p>
+  <div id="content" hidden>
+    <div class="stats" id="stats"></div>
+    <h2>Words people typed in</h2>
+    <div class="table-wrap"><table id="recent"></table></div>
+    <h2>Where people gave their own call</h2>
+    <div class="table-wrap"><table id="disagree"></table></div>
+    <div class="cols">
+      <div><h2>Crowd's most bouba</h2><table id="top"></table></div>
+      <div><h2>Crowd's most kiki</h2><table id="bottom"></table></div>
+    </div>
+  </div>
+</main>
+<script>
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  let token = "";
+  try { token = sessionStorage.getItem("bk_admin") || ""; } catch {}
+  $("token").value = token;
+
+  async function api(method, body, query = "") {
+    const r = await fetch("/api/admin" + query, {
+      method, headers: { "x-admin-token": token, ...(body ? { "Content-Type": "application/json" } : {}) },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    if (r.status === 401) throw new Error("That token wasn't accepted.");
+    if (!r.ok) throw new Error("Request failed with status " + r.status + ".");
+    return r;
+  }
+
+  function table(el, cols, rows, render = {}) {
+    el.innerHTML = "<tr>" + cols.map(c => `<th>${esc(c[1])}</th>`).join("") + "</tr>" +
+      (rows.length ? rows.map(r => "<tr>" + cols.map(([k]) => `<td class="${k === "word" ? "word" : ""}">${render[k] ? render[k](r) : esc(r[k])}</td>`).join("") + "</tr>").join("")
+        : `<tr><td colspan="${cols.length}" style="color:var(--muted)">Nothing yet.</td></tr>`);
+  }
+
+  async function load() {
+    try {
+      const d = await (await api("GET")).json();
+      $("content").hidden = false; $("msg").textContent = "";
+      const s = d.stats;
+      $("stats").innerHTML = [["approved", "words in the pool"], ["blocked", "blocked words"], ["user_words", "typed in by visitors"],
+        ["comparisons", "comparisons"], ["skips", "can't decide"], ["voters", "people comparing"], ["opinions", "own calls"]]
+        .map(([k, l]) => `<div class="stat"><b>${s[k]}</b><span>${l}</span></div>`).join("");
+      table($("recent"), [["word", "Word"], ["status", "Status"], ["check_note", "Check"], ["model_score", "Model"], ["created_at", "Added"], ["id", ""]], d.recent, {
+        status: r => `<span class="${r.status}">${r.status}</span>`,
+        created_at: r => esc(new Date(r.created_at).toLocaleString()),
+        id: r => `<button data-id="${r.id}" data-to="${r.status === "approved" ? "blocked" : "approved"}">${r.status === "approved" ? "Block" : "Approve"}</button>`,
+      });
+      table($("disagree"), [["word", "Word"], ["model", "Model"], ["bouba", "Said bouba"], ["kiki", "Said kiki"]], d.disagreements);
+      table($("top"), [["word", "Word"], ["crowd", "Crowd"], ["comparisons", "Compared"]], d.most_bouba);
+      table($("bottom"), [["word", "Word"], ["crowd", "Crowd"], ["comparisons", "Compared"]], d.most_kiki);
+    } catch (e) { $("msg").textContent = e.message; }
+  }
+
+  $("login").addEventListener("submit", e => {
+    e.preventDefault(); token = $("token").value.trim();
+    try { sessionStorage.setItem("bk_admin", token); } catch {}
+    load();
+  });
+  $("recent").addEventListener("click", async e => {
+    const b = e.target.closest("button[data-id]"); if (!b) return;
+    try { await api("POST", { action: "set_status", id: b.dataset.id, status: b.dataset.to }); load(); }
+    catch (err) { $("msg").textContent = err.message; }
+  });
+  $("recompute").addEventListener("click", async () => {
+    try { const r = await (await api("POST", { action: "recompute" })).json();
+      $("msg").textContent = `Recomputed crowd scores for ${r.words} words from ${r.comparisons} comparisons.`; load(); }
+    catch (e) { $("msg").textContent = e.message; }
+  });
+  $("export").addEventListener("click", async () => {
+    try {
+      const blob = await (await api("GET", null, "?export=csv")).blob();
+      const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(blob), download: "bouba-kiki-words.csv" });
+      a.click(); URL.revokeObjectURL(a.href);
+    } catch (e) { $("msg").textContent = e.message; }
+  });
+  if (token) load();
+</script>
+</body>
+</html>

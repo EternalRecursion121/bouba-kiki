@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bouba or Kiki: Compare</title>
+<meta name="description" content="Pick which of two words is more bouba or more kiki, and help train the model.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2l3.5 9.5L29 9l-6 8 6 8-9.5-2.5L16 32l-3.5-9.5L3 25l6-8-6-8 9.5 2.5z' fill='%23F0452A'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Chakra+Petch:wght@500;700&family=Hanken+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F1F2F6; --ink: #1A1C27; --muted: #666A7D; --line: #D5D7E1;
+    --bouba: #6C68EE; --kiki: #F0452A; --field: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #16171F; --ink: #ECEDF3; --muted: #9A9DB0; --line: #2E3040;
+      --bouba: #8E8BFF; --kiki: #FF5E42; --field: #1F2029;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #16171F; --ink: #ECEDF3; --muted: #9A9DB0; --line: #2E3040;
+    --bouba: #8E8BFF; --kiki: #FF5E42; --field: #1F2029;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font: 400 1rem/1.55 "Hanken Grotesk", system-ui, sans-serif;
+    min-height: 100svh; display: flex; flex-direction: column; align-items: center;
+    padding: 2.5rem 1rem 2rem;
+  }
+  main { width: 100%; max-width: 40rem; flex: 1; display: flex; flex-direction: column; align-items: center; }
+  h1 { margin: 0; font-size: 1.25rem; font-weight: 500; }
+  h1 a { color: inherit; text-decoration: none; }
+  h1 .b { font-family: "Baloo 2", sans-serif; font-weight: 700; color: var(--bouba); }
+  h1 .k { font-family: "Chakra Petch", sans-serif; font-weight: 700; color: var(--kiki); }
+  h1 .or { color: var(--muted); font-size: 0.95rem; margin: 0 0.15em; }
+
+  .question { margin: 3.5rem 0 1.75rem; font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 500; text-align: center; }
+  .question .b { font-family: "Baloo 2", sans-serif; font-weight: 700; color: var(--bouba); }
+  .question .k { font-family: "Chakra Petch", sans-serif; font-weight: 700; color: var(--kiki); }
+
+  .pair { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .choice {
+    font: 500 clamp(1.3rem, 4.5vw, 1.9rem)/1.2 "Hanken Grotesk", system-ui, sans-serif;
+    color: var(--ink); background: var(--field);
+    border: 1.5px solid var(--line); border-radius: 1.25rem;
+    min-height: 9rem; padding: 1.25rem; cursor: pointer;
+    overflow-wrap: anywhere; transition: border-color 0.15s, transform 0.15s;
+  }
+  .choice:hover { border-color: var(--ink); }
+  .choice:active { transform: scale(0.98); }
+  .choice.picked { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent) inset; }
+  .choice:disabled { cursor: progress; }
+  .choice:focus-visible, .skip:focus-visible, a:focus-visible { outline: 2px solid var(--bouba); outline-offset: 3px; }
+
+  .skip {
+    margin-top: 1.25rem; background: none; border: 0; padding: 0.25rem;
+    font: inherit; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+  }
+  .status { margin: 1.5rem 0 0; min-height: 1.5em; color: var(--muted); font-size: 0.95rem; text-align: center; font-variant-numeric: tabular-nums; }
+  .error { color: var(--kiki); }
+  .keys { margin-top: 0.5rem; color: var(--muted); font-size: 0.85rem; }
+  footer { margin-top: 2.5rem; font-size: 0.9rem; }
+  footer a { color: var(--muted); text-underline-offset: 3px; }
+  @media (max-width: 30rem) { .keys { display: none; } .choice { min-height: 7rem; } }
+  @media (prefers-reduced-motion: reduce) { .choice { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1><a href="/"><span class="b">bouba</span><span class="or">or</span><span class="k">kiki</span></a></h1>
+
+  <p class="question" id="question" aria-live="polite">&nbsp;</p>
+  <div class="pair">
+    <button class="choice" id="left" type="button" disabled>&nbsp;</button>
+    <button class="choice" id="right" type="button" disabled>&nbsp;</button>
+  </div>
+  <button class="skip" id="skip" type="button">Can't decide</button>
+  <p class="keys">Use ← and → to choose, space to skip.</p>
+  <p class="status" id="status" role="status"></p>
+</main>
+<footer><a href="/">Score a word</a></footer>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const leftBtn = $("left"), rightBtn = $("right"), skipBtn = $("skip"), questionEl = $("question"), statusEl = $("status");
+  let current = null, next = null, busy = false;
+
+  async function fetchPair() {
+    const r = await fetch("/api/pair", { credentials: "same-origin" });
+    const body = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(body.error || "Couldn't load a pair (status " + r.status + ").");
+    return body;
+  }
+
+  function show(pair) {
+    current = pair;
+    const cls = pair.question === "bouba" ? "b" : "k";
+    questionEl.innerHTML = 'Which is more <span class="' + cls + '">' + pair.question + "</span>?";
+    document.documentElement.style.setProperty("--accent", pair.question === "bouba" ? "var(--bouba)" : "var(--kiki)");
+    leftBtn.textContent = pair.left;
+    rightBtn.textContent = pair.right;
+    for (const b of [leftBtn, rightBtn]) { b.classList.remove("picked"); b.disabled = false; }
+    busy = false;
+    fetchPair().then(p => { next = p; }).catch(() => { next = null; });   // preload the following pair
+  }
+
+  async function load() {
+    try { show(next ?? await fetchPair()); next = null; }
+    catch (e) { statusEl.innerHTML = '<span class="error">' + e.message + "</span>"; }
+  }
+
+  async function vote(choice) {
+    if (!current || busy) return;
+    busy = true;
+    for (const b of [leftBtn, rightBtn]) b.disabled = true;
+    if (choice !== "skip") (choice === "left" ? leftBtn : rightBtn).classList.add("picked");
+    try {
+      const r = await fetch("/api/vote", {
+        method: "POST", credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: current.token, choice }),
+      });
+      const body = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(body.error || "That vote didn't go through (status " + r.status + ").");
+      statusEl.textContent = body.yours === 1 ? "1 comparison so far. Thank you!" : body.yours + " comparisons so far. Thank you!";
+    } catch (e) {
+      statusEl.innerHTML = '<span class="error">' + e.message + "</span>";
+    }
+    setTimeout(load, choice === "skip" ? 0 : 250);
+  }
+
+  leftBtn.addEventListener("click", () => vote("left"));
+  rightBtn.addEventListener("click", () => vote("right"));
+  skipBtn.addEventListener("click", () => vote("skip"));
+  document.addEventListener("keydown", e => {
+    if (e.target.tagName === "INPUT") return;
+    if (e.key === "ArrowLeft") vote("left");
+    else if (e.key === "ArrowRight") vote("right");
+    else if (e.key === " ") { e.preventDefault(); vote("skip"); }
+  });
+  load();
+</script>
+</body>
+</html>

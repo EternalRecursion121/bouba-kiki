@@ -1,4 +1,5 @@
 import model from "./_model.js";
+import { registerWord } from "./_lib.js";
 
 const WORD = /^[\p{L}\p{N}][\p{L}\p{M}\p{N}'’ .,-]{0,39}$/u;
 const cache = new Map(); // per-instance; the CDN cache header does most of the work
@@ -38,10 +39,12 @@ export default async function handler(req, res) {
     }
     const data = await r.json();
     const p = position(data.data[0].embedding);
+    let status = null;
+    try { status = await registerWord(word, p); } catch { /* scoring still works if the database is down */ }
     if (cache.size > 5000) cache.clear();
-    cache.set(key, p);
+    cache.set(key, { p, status });
   }
-  const bouba = cache.get(key);
+  const { p: bouba, status } = cache.get(key);
   res.setHeader("Cache-Control", "public, s-maxage=2592000, stale-while-revalidate=86400");
-  return res.status(200).json({ word, position: bouba, bouba: bouba / 100, kiki: 1 - bouba / 100 });
+  return res.status(200).json({ word, position: bouba, bouba: bouba / 100, kiki: 1 - bouba / 100, in_pool: status === "approved" });
 }
