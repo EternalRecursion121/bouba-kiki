@@ -6,6 +6,6 @@ for (const word of words) {
   await handler({ query: { word } }, {
     status(code) { this.code = code; return this; },
     setHeader() {},
-    json(body) { console.log(String(this.code).padEnd(4), body.error ?? `${(body.bouba * 100).toFixed(1).padStart(5)}% bouba  ${word}`); },
+    json(body) { console.log(String(this.code).padEnd(4), body.error ?? `${body.position.toFixed(1).padStart(5)}  ${word}`); },
   });
 }

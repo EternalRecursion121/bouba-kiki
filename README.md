@@ -1,6 +1,6 @@
 # bouba or kiki
 
-Type any word and get the probability that it's **bouba** (round, soft) rather than **kiki** (sharp, spiky),
+Type any word and see where it sits on a scale from **kiki** (sharp, spiky) to **bouba** (round, soft),
 according to Google's `gemini-embedding-2`.
 
 ## How the score works
@@ -11,15 +11,15 @@ according to Google's `gemini-embedding-2`.
    thorn, porcupine, staccato, …). Both lists deliberately mix pleasant and unpleasant items so the axis
    doesn't learn "safe vs dangerous".
 3. **Axis** = `unit( unit(mean bouba − mean kiki) + 0.5 · unit(bouba − kiki) )`.
-4. **Calibrate.** `P(bouba) = sigmoid((e·axis − offset) · scale)`. `offset` is the median word in a
-   779-word general vocabulary (`data/pool_extra.txt`), so an ordinary word sits near 50%; `scale` is fit by
-   logistic regression on the word lists.
+4. **Position.** Each word is projected onto the axis and scaled so the word "kiki" sits at **0** and "bouba"
+   at **100** (clipped; 5% of the list words fall outside). An ordinary word lands around 40–50.
+   Examples: needle 7, takete 12, cactus 36, Tuesday 46, table 50, maluma 58, marshmallow 68.
 
 | check | result |
 |---|---|
-| 5-fold cross-validated accuracy on the word lists | 96.9% |
-| `bouba` / `kiki` | 100% / 0% bouba |
-| `maluma` / `takete` (never trained on) | 99% / 0% bouba |
+| 5-fold cross-validated accuracy on the word lists (bouba vs kiki side) | 96.9% |
+| `bouba` / `kiki` | 100 / 0 (by construction) |
+| `maluma` / `takete` (never trained on) | 58 / 12 |
 | cos(axis, positive − negative words) | −0.01 |
 | cos(axis, safe − dangerous words) | +0.13 |
 

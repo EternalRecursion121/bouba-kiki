@@ -3,14 +3,16 @@ import model from "./_model.js";
 const WORD = /^[\p{L}\p{N}][\p{L}\p{M}\p{N}'’ .,-]{0,39}$/u;
 const cache = new Map(); // per-instance; the CDN cache header does most of the work
 
-export function probability(embedding) {
+// Position on the bouba–kiki axis: the word "kiki" sits at 0, "bouba" at 100.
+export function position(embedding) {
   let norm = 0, dot = 0;
   for (let i = 0; i < embedding.length; i++) {
     norm += embedding[i] * embedding[i];
     dot += embedding[i] * model.axis[i];
   }
   const s = dot / Math.sqrt(norm);
-  return 1 / (1 + Math.exp(-(s - model.offset) * model.scale));
+  const p = (100 * (s - model.kiki_at)) / (model.bouba_at - model.kiki_at);
+  return Math.min(100, Math.max(0, p));
 }
 
 export default async function handler(req, res) {
@@ -32,11 +34,11 @@ export default async function handler(req, res) {
       return res.status(502).json({ error: `The embedding service returned ${r.status}. Try again in a moment.` });
     }
     const data = await r.json();
-    const p = probability(data.data[0].embedding);
+    const p = position(data.data[0].embedding);
     if (cache.size > 5000) cache.clear();
     cache.set(key, p);
   }
   const bouba = cache.get(key);
   res.setHeader("Cache-Control", "public, s-maxage=2592000, stale-while-revalidate=86400");
-  return res.status(200).json({ word, bouba, kiki: 1 - bouba });
+  return res.status(200).json({ word, position: bouba, bouba: bouba / 100, kiki: 1 - bouba / 100 });
 }

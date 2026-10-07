@@ -70,6 +70,7 @@
   .scale { width: 100%; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.75rem; }
   .scale .end-b { font-family: "Baloo 2", sans-serif; font-weight: 700; color: var(--bouba); }
   .scale .end-k { font-family: "Chakra Petch", sans-serif; font-weight: 700; color: var(--kiki); }
+  .scale .num { font-family: "Hanken Grotesk", sans-serif; font-weight: 400; color: var(--muted); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
   .track { position: relative; height: 2px; background: var(--line); }
   .marker {
     position: absolute; top: 50%; left: 50%;
@@ -125,9 +126,9 @@
   <p class="verdict" id="verdict">Type a word to see which way it leans.</p>
 
   <div class="scale" aria-hidden="true">
-    <span class="end-b">bouba</span>
+    <span class="end-k">kiki <span class="num">0</span></span>
     <div class="track"><div class="marker" id="marker"></div></div>
-    <span class="end-k">kiki</span>
+    <span class="end-b"><span class="num">100</span> bouba</span>
   </div>
 
   <form id="form" autocomplete="off">
@@ -205,16 +206,16 @@
   }
   draw(current);
 
-  function show(word, bouba) {
-    const kiki = 1 - bouba;
-    const isBouba = bouba >= 0.5;
+  // position: 0 = where the word "kiki" sits on the axis, 100 = where "bouba" sits.
+  function show(word, position) {
+    const bouba = position / 100, kiki = 1 - bouba;
+    const isBouba = position >= 50;
     wordEl.textContent = word;
     wordEl.className = "word " + (isBouba ? "is-bouba" : "is-kiki");
     wordEl.style.color = isBouba ? "var(--bouba)" : "var(--kiki)";
-    const pct = Math.round((isBouba ? bouba : kiki) * 100);
-    verdict.innerHTML = "<strong>" + pct + "%</strong> " + (isBouba ? "bouba" : "kiki");
+    verdict.innerHTML = "<strong>" + Math.round(position) + "</strong> on the scale";
     marker.classList.add("on");
-    marker.style.left = (kiki * 100) + "%";
+    marker.style.left = position + "%";
     marker.style.borderRadius = Math.round(50 * bouba) + "%";
     animateTo(kiki);
   }
@@ -226,7 +227,7 @@
       const r = await fetch("/api/score?word=" + encodeURIComponent(word));
       const body = await r.json().catch(() => ({ error: "The server sent an unreadable response." }));
       if (!r.ok) throw new Error(body.error || "Scoring failed with status " + r.status + ".");
-      show(body.word, body.bouba);
+      show(body.word, body.position);
       history.replaceState(null, "", "?w=" + encodeURIComponent(body.word));
     } catch (e) {
       errorEl.textContent = e.message;
