@@ -107,6 +107,25 @@
 
   .error { color: var(--kiki); min-height: 1.5em; margin: 0.6rem 0 0; font-size: 0.95rem; text-align: center; }
 
+  footer { margin-top: 2.5rem; font-size: 0.85rem; text-align: center; }
+  footer .how {
+    background: none; color: var(--muted); padding: 0; border-radius: 0;
+    font-size: inherit; font-weight: 400; text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  footer .how:hover { color: var(--ink); }
+
+  dialog {
+    width: min(100% - 2rem, 30rem);
+    background: var(--paper); color: var(--ink);
+    border: 1.5px solid var(--line); border-radius: 1rem;
+    padding: 1.5rem 1.5rem 1.25rem;
+  }
+  dialog::backdrop { background: rgb(0 0 0 / 0.45); }
+  dialog h2 { margin: 0 0 0.75rem; font-size: 1.1rem; font-weight: 500; }
+  dialog p { margin: 0 0 0.8rem; font-size: 0.95rem; line-height: 1.6; color: var(--muted); }
+  dialog form { display: flex; justify-content: flex-end; margin: 0.5rem 0 0; width: auto; }
+  dialog form button { padding: 0.5rem 1.2rem; }
 
   @media (prefers-reduced-motion: reduce) {
     .marker, .word { transition: none; }
@@ -145,6 +164,22 @@
   </p>
 </main>
 
+<footer>
+  <button type="button" class="how" id="how">How this works</button>
+</footer>
+
+<dialog id="about" aria-labelledby="about-title">
+  <h2 id="about-title">How this works</h2>
+  <p>
+    Each word is embedded with Google's gemini-embedding-2 and projected onto an axis anchored on
+    the words “bouba” and “kiki”, sharpened by 130 round, soft things and 130 sharp, spiky ones.
+  </p>
+  <p>
+    The percentage is a classifier's probability: it sorts held-out words correctly 97% of the time.
+    It scores what the model associates with a word, which is not the same as how it sounds.
+  </p>
+  <form method="dialog"><button type="submit">Close</button></form>
+</dialog>
 
 <script>
   const path = document.getElementById("shape");
@@ -244,6 +279,12 @@
     input.value = b.textContent;
     score(b.textContent);
   }));
+  const about = document.getElementById("about");
+  document.getElementById("how").addEventListener("click", () => about.showModal());
+  about.addEventListener("click", e => {   // close on a click outside the dialog box
+    const r = about.getBoundingClientRect();
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) about.close();
+  });
   const initial = new URLSearchParams(location.search).get("w");
   if (initial) { input.value = initial; score(initial); }
 </script>
