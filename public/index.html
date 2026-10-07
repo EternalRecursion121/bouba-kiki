@@ -107,8 +107,6 @@
 
   .error { color: var(--kiki); min-height: 1.5em; margin: 0.6rem 0 0; font-size: 0.95rem; text-align: center; }
 
-  footer { max-width: 34rem; margin-top: 2.5rem; font-size: 0.85rem; color: var(--muted); text-align: center; line-height: 1.6; }
-  footer a { color: inherit; }
 
   @media (prefers-reduced-motion: reduce) {
     .marker, .word { transition: none; }
@@ -147,12 +145,6 @@
   </p>
 </main>
 
-<footer>
-  Each word is embedded with Google's gemini-embedding-2 and projected onto an axis anchored on
-  the words “bouba” and “kiki”, sharpened by 130 round, soft things and 130 sharp, spiky ones.
-  The percentage is a classifier's probability: it sorts held-out words correctly 97% of the time.
-  It scores what the model associates with a word, which is not the same as how it sounds.
-</footer>
 
 <script>
   const path = document.getElementById("shape");

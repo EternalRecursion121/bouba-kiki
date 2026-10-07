@@ -1,6 +1,6 @@
 import model from "./_model.js";
 
-const WORD = /^[\p{L}][\p{L}\p{M}'’ -]{0,39}$/u;
+const WORD = /^[\p{L}\p{N}][\p{L}\p{M}\p{N}'’ .,-]{0,39}$/u;
 const cache = new Map(); // per-instance; the CDN cache header does most of the work
 
 export function probability(embedding) {
@@ -16,7 +16,7 @@ export function probability(embedding) {
 export default async function handler(req, res) {
   const word = String(req.query?.word ?? "").trim().replace(/\s+/g, " ");
   if (!WORD.test(word)) {
-    return res.status(400).json({ error: "Enter a word or short phrase: letters, spaces, hyphens or apostrophes, up to 40 characters." });
+    return res.status(400).json({ error: "Enter a word or short phrase: letters, numbers, spaces, hyphens or apostrophes, up to 40 characters." });
   }
   const key = word.toLowerCase();
   if (!cache.has(key)) {
