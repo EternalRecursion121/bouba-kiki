@@ -1,36 +1,53 @@
 # bouba or kiki
 
-Type any word and see where it sits on a scale from **kiki** (sharp, spiky) to **bouba** (round, soft),
-according to Google's `gemini-embedding-2`.
+Type any word and see where it sits on a scale from **kiki** to **bouba**, according to Google's
+`gemini-embedding-2`.
+
+Bouba/kiki here is about the whole vibe, not just shape. **Bouba** is soft, round, slow, warm, low,
+heavy, mellow and comforting (tubas, porridge, naps, Winnie the Pooh). **Kiki** is sharp, quick, bright,
+high, crisp, jittery and witty (piccolos, lemons, fire alarms, Tinker Bell). When shape and vibe disagree,
+vibe wins: a lemon is round but kiki.
 
 ## How the score works
 
-1. **Anchor.** The literal direction `e("bouba") − e("kiki")` in embedding space.
-2. **Sharpen.** The difference between the mean embeddings of 130 bouba things (`data/bouba.txt`: balloon,
-   marshmallow, hippo, boulder, slug, mold, …) and 130 kiki things (`data/kiki.txt`: star, crystal, origami,
-   thorn, porcupine, staccato, …). Both lists deliberately mix pleasant and unpleasant items so the axis
-   doesn't learn "safe vs dangerous".
-3. **Axis** = `unit( unit(mean bouba − mean kiki) + 0.5 · unit(bouba − kiki) )`.
-4. **Position.** Each word is projected onto the axis and placed on a 0–100 scale in two linear pieces:
-   the word "kiki" sits at **0**, the divide between the bouba and kiki lists at **50**, and the word "bouba"
-   at **100** (clipped; 5% of the list words fall outside). Below 50 is the kiki side, above is bouba.
-   Examples: needle 10, takete 16, cactus 48, Tuesday 57, table 60, maluma 66, marshmallow 75.
-   An ordinary word lands near the middle (median of a 779-word general vocabulary: 53).
+1. **Labels.** `data/bouba.txt` (375) and `data/kiki.txt` (397) are hand-labelled by vibe across
+   temperaments, sounds and music, tastes, ways of moving, textures, weather, animals, objects, colours
+   and fictional characters. Both sides include pleasant and unpleasant things, so the axis can't just
+   learn "nice vs nasty".
+2. **Regression.** Ridge regression from the full 3,072-dimensional embedding to ±1 labels. The words
+   "bouba" and "kiki" are upweighted (each counts 60 times) so they anchor the ends.
+3. **Position.** The regression score is a position along one learned direction, mapped to 0–100 with three
+   fixed points: "kiki" at **0**, the decision boundary at **50**, "bouba" at **100**. Each half is bent by a
+   power curve so the median training word on that side lands at 25 / 75. Ordinary words centre on 50.
 
 | check | result |
 |---|---|
-| 5-fold cross-validated accuracy: held-out list words on the right side of 50 | 95.0% |
-| `bouba` / `kiki` | 100 / 0 (by construction) |
-| `maluma` / `takete` (never trained on) | 66 / 16 |
-| cos(axis, positive − negative words) | −0.01 |
-| cos(axis, safe − dangerous words) | +0.13 |
+| 5-fold cross-validation on the lists (right side of 50) | 95.2% |
+| held-out fictional characters (`data/test_characters.txt`) | 29 / 32 |
+| held-out shape-vs-vibe cases (`data/test_conflicts.txt`) | 9 / 11 |
+| `maluma` / `takete` (never trained on) | 64 / 20 |
+| general vocabulary scoring above 90 or below 10 | 5% |
 
-The anchor dose (0.5) was chosen by sweeping it under cross-validation (classifier accuracy): 0 → 94.6%
-(and "kiki" scored 36% bouba), 0.5 → 96.9%, 3 → 88.5% (the axis drifts toward spelling: b/o/u vs k/i/t).
+The held-out sets were used to compare several versions, so treat those two numbers as slightly optimistic.
 
-`scripts/build_iterative.py` is an experiment that grows the clusters from the seed pair by repeatedly
-recruiting the most bouba/kiki words from new batches and pruning misfits. It held out worse in every
-configuration tried (65–89%) because it drifts toward loosely related words, so it isn't used.
+## What didn't work
+
+All scripts are kept in `scripts/` so these can be rerun.
+
+- **A single mean-difference axis** (`mean(bouba) − mean(kiki)` plus the literal `bouba − kiki` direction):
+  fine on the lists, but every category got its own offset (characters and foods drifted bouba).
+  27/34 characters. The regression on the full embedding replaced it.
+- **Growing clusters automatically from seeds** (`build_iterative.py`, `grow_clusters.py`): the clusters
+  always locked onto the easiest non-vibe split. First category (all fictional characters went kiki),
+  then noun vs adjective, then spelling (wall|wallow). Matched-pair recruitment didn't fix it.
+- **Growing with each proposal reviewed** (`review_round.py`, `eval_clusters.py`): every accepted word was
+  right by vibe, but the proposals were skewed by kind, so the clusters became "things vs qualities". 18/34
+  characters.
+- **Defining the axis from only the clearest examples** (`core_axis.py`): those are a narrow set (jittery
+  noises vs cosy furniture) and generalised worse (53% of characters).
+- **Removing noun/adjective and name/word directions:** no measurable effect.
+- **A small language model** (`lm_features_modal.py`, `probe.py`): ridge/logistic probes on
+  Qwen2.5-1.5B-Instruct hidden states reached 27/34 characters at best; asking it directly was at chance.
 
 ## Run locally
 
@@ -38,7 +55,7 @@ configuration tried (65–89%) because it drifts toward loosely related words, s
 export OPENROUTER_API_KEY=sk-or-...
 node scripts/dev.mjs            # http://localhost:3000
 npm test                        # scores a few words through the real handler
-python3 scripts/build_model.py  # rebuilds api/_model.js from the word lists
+python3 scripts/build_model.py  # retrains api/_model.js from the lists
 ```
 
 ## Deploy on Vercel

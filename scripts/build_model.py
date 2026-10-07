@@ -1,13 +1,12 @@
 """Build the bouba/kiki scorer.
 
-Axis = unit( unit(mean(bouba words) − mean(kiki words)) + LAM · unit(e("bouba") − e("kiki")) ).
-The literal bouba − kiki direction is the anchor; the hand-labelled word lists sharpen it.
-Score = position on that axis in two linear pieces: the word "kiki" sits at 0, the divide
-between the bouba and kiki lists (midpoint of their mean projections) at 50, and the word
-"bouba" at 100 (clipped to 0–100). Embeddings: google/gemini-embedding-2 via OpenRouter.
-Writes api/_model.js.
+Model: ridge regression (±1 labels) on gemini-embedding-2 embeddings (via OpenRouter),
+trained on the hand-labelled vibe lists in data/bouba.txt and data/kiki.txt. Its score is a
+position along one learned direction. That position is mapped to 0–100 with three fixed points:
+the word "kiki" at 0, the decision boundary at 50 and the word "bouba" at 100; each half is bent
+by a power curve so the median list word on that side lands at 25 / 75.
 
-Usage: OPENROUTER_API_KEY=... python3 scripts/build_model.py
+Writes api/_model.js.  Usage: OPENROUTER_API_KEY=... python3 scripts/build_model.py
 """
 import os, json, urllib.request
 import numpy as np
@@ -97,7 +96,11 @@ def cv(Eb, Ek, k=5, seed=0):
         res[name] = dict(acc=acc, logloss=ll, cal=cal)
     return res
 
-LAM = 0.5   # dose of the literal bouba − kiki direction; chosen by the CV sweep in README
+LAM = float(os.environ.get("LAM", 0.5))   # dose of the literal bouba − kiki direction (see README sweep)
+
+def load_tests(name):
+    rows = [l.rstrip("\n").split("\t") for l in open(os.path.join(ROOT, "data", name)) if l.strip() and not l.startswith("#")]
+    return [(lab, item) for lab, item in rows]
 
 def unit(v):
     return v / np.linalg.norm(v)
@@ -118,52 +121,89 @@ def ends(E, a, B, K):
     mid = (np.mean([E[w] @ a for w in B]) + np.mean([E[w] @ a for w in K])) / 2
     return lo, float(mid), hi
 
-def position(s, lo, mid, hi):
-    p = 50 * (s - lo) / (mid - lo) if s < mid else 50 + 50 * (s - mid) / (hi - mid)
-    return min(100.0, max(0.0, p))
+def position(s, lo, mid, hi, gk=1.0, gb=1.0):
+    """0 at "kiki", 50 at the divide, 100 at "bouba"; each half is x ** gamma of its linear distance."""
+    if s < mid:
+        d = min(1.0, (mid - s) / (mid - lo)); return 50 - 50 * d ** gk
+    d = min(1.0, (s - mid) / (hi - mid)); return 50 + 50 * d ** gb
+
+def gammas(E, a, B, K, lo, mid, hi):
+    """Exponents that put the median list word of each side at 25 / 75."""
+    db = np.median([np.clip((E[w] @ a - mid) / (hi - mid), 1e-6, 1) for w in B])
+    dk = np.median([np.clip((mid - E[w] @ a) / (mid - lo), 1e-6, 1) for w in K])
+    return float(np.log(0.5) / np.log(dk)), float(np.log(0.5) / np.log(db))
 
 def prob(E, w, a, center, scale):
     return float(1 / (1 + np.exp(-(E[w] @ a - center) * scale)))
 
+L2_GRID = (0.3, 1.0, 3.0, 10.0, 30.0)
+ANCHOR_COPIES = int(os.environ.get("ANCHOR_COPIES", 60))   # "bouba"/"kiki" count this many times in training
+
+def fit_regression(X, y, l2):
+    """Ridge regression of ±1 labels on standardised features, solved exactly in dual form.
+    l2 is relative to the mean kernel diagonal. Returns (direction, offset) in raw-embedding space;
+    score = e·direction + offset, decision boundary at 0."""
+    mu, sd = X.mean(0), X.std(0) + 1e-6
+    Z = (X - mu) / sd
+    t = 2 * y - 1; tm = t.mean()
+    Kmat = Z @ Z.T
+    alpha = np.linalg.solve(Kmat + l2 * np.trace(Kmat) / len(t) * np.eye(len(t)), t - tm)
+    d = (Z.T @ alpha) / sd
+    return d, float(tm - mu @ d)
+
+def scale_points(score_kiki, score_bouba, sb, sk):
+    """Raw-score fixed points (kiki 0, boundary 50, bouba 100) and the curve exponents."""
+    lo, mid, hi = score_kiki, 0.0, score_bouba
+    db = np.median(np.clip(sb / hi, 1e-6, 1)); dk = np.median(np.clip(sk / lo, 1e-6, 1))
+    return lo, mid, hi, float(np.log(0.5) / np.log(dk)), float(np.log(0.5) / np.log(db))
+
 if __name__ == "__main__":
+    TESTS = {"characters": load_tests("test_characters.txt"), "shape-vs-vibe": load_tests("test_conflicts.txt")}
+    leak = [i for t in TESTS.values() for _, i in t if i in BOUBA + KIKI]
+    assert not leak, f"test items in training data: {leak}"
     pool = [w for w in dict.fromkeys(load("pool_extra.txt")) if w not in BOUBA + KIKI]
-    probes = ["bouba", "kiki"] + PSEUDO_B + PSEUDO_K + HELDOUT_B + HELDOUT_K + NEUTRAL + POS + NEG + SAFE + DANGER
+    probes = ["bouba", "kiki"] + PSEUDO_B + PSEUDO_K + [i for t in TESTS.values() for _, i in t]
     words = list(dict.fromkeys(BOUBA + KIKI + pool + probes))
     E = dict(zip(words, embed(words)))
-    print(f"dataset: {len(BOUBA)} bouba, {len(KIKI)} kiki; calibration pool {len(pool)} words")
+    X = np.array([E[w] for w in BOUBA + KIKI]); y = np.r_[np.ones(len(BOUBA)), np.zeros(len(KIKI))]
+    XA = np.array([E["bouba"]] * ANCHOR_COPIES + [E["kiki"]] * ANCHOR_COPIES).reshape(-1, X.shape[1])   # anchor pair, upweighted
+    yA = np.r_[np.ones(ANCHOR_COPIES), np.zeros(ANCHOR_COPIES)]
+    print(f"dataset: {len(BOUBA)} bouba, {len(KIKI)} kiki; general vocabulary {len(pool)} words")
 
-    rng = np.random.default_rng(0)
-    fb, fk = rng.permutation(len(BOUBA)) % 5, rng.permutation(len(KIKI)) % 5
-    hits = []
-    for f in range(5):
-        B = [w for i, w in enumerate(BOUBA) if fb[i] != f]; K = [w for i, w in enumerate(KIKI) if fk[i] != f]
-        af = build(E, B, K, pool)[0]; ef = ends(E, af, B, K)
-        hits += [position(E[w] @ af, *ef) >= 50 for i, w in enumerate(BOUBA) if fb[i] == f]
-        hits += [position(E[w] @ af, *ef) < 50 for i, w in enumerate(KIKI) if fk[i] == f]
-    cv_acc = float(np.mean(hits))
-    a, center, scale = build(E, BOUBA, KIKI, pool)
-    seed = unit(E["bouba"] - E["kiki"])
-    val = unit(np.mean([E[w] for w in POS], 0) - np.mean([E[w] for w in NEG], 0))
-    dng = unit(np.mean([E[w] for w in SAFE], 0) - np.mean([E[w] for w in DANGER], 0))
-    print(f"5-fold CV accuracy (side of 50) {cv_acc:.1%} | cos(axis, bouba−kiki) {a @ seed:.3f} | "
-          f"cos(axis, valence) {a @ val:+.3f} | cos(axis, safe−dangerous) {a @ dng:+.3f}")
-    print(f"P(bouba): bouba {prob(E, 'bouba', a, center, scale):.1%}   kiki {prob(E, 'kiki', a, center, scale):.1%}")
-    for label, ws in [("pseudo bouba", PSEUDO_B), ("pseudo kiki", PSEUDO_K), ("held-out bouba", HELDOUT_B),
-                      ("held-out kiki", HELDOUT_K), ("neutral", NEUTRAL)]:
-        ps = [prob(E, w, a, center, scale) for w in ws]
-        print(f"{label:15s} mean {np.mean(ps):.0%} | " + "  ".join(f"{w} {p:.0%}" for w, p in zip(ws, ps)))
+    folds = np.random.default_rng(0).permutation(len(y)) % 5
+    cv = {}
+    for l2 in L2_GRID:
+        hits = []
+        for f in range(5):
+            d, o = fit_regression(np.r_[X[folds != f], XA], np.r_[y[folds != f], yA], l2)
+            hits += list(((X[folds == f] @ d + o) > 0) == (y[folds == f] == 1))
+        cv[l2] = float(np.mean(hits))
+    l2 = max(cv, key=cv.get)
+    print("5-fold CV accuracy by regularisation:", "  ".join(f"{k}: {v:.1%}" for k, v in cv.items()), f"→ using {l2}")
 
-    lo, mid, hi = ends(E, a, BOUBA, KIKI)
-    pos = lambda w: position(float(E[w] @ a), lo, mid, hi)
-    print("position (kiki 0, divide 50, bouba 100): " + "  ".join(f"{w} {pos(w):.0f}" for w in
-          ["maluma", "takete", "marshmallow", "table", "Tuesday", "cactus", "needle", "blue", "seven"]))
-    print(f"list words clipped at the ends: {np.mean([pos(w) in (0.0, 100.0) for w in BOUBA + KIKI]):.0%} | "
-          f"mean position: bouba list {np.mean([pos(w) for w in BOUBA]):.0f}, kiki list {np.mean([pos(w) for w in KIKI]):.0f}, "
-          f"general vocabulary median {np.median([pos(w) for w in pool]):.0f}")
-    out = {"model": MODEL, "anchor": ["bouba", "kiki"], "lam": LAM,
-           "n_bouba": len(BOUBA), "n_kiki": len(KIKI), "cv_accuracy": round(cv_acc, 4),
-           "axis": [round(float(v), 6) for v in a],
-           "kiki_at": lo, "divide_at": mid, "bouba_at": hi}   # see position() above
+    d, o = fit_regression(np.r_[X, XA], np.r_[y, yA], l2)
+    raw = lambda w: float(E[w] @ d + o)
+    sb = np.array([raw(w) for w in BOUBA]); sk = np.array([raw(w) for w in KIKI])
+    lo, mid, hi, gk, gb = scale_points(raw("kiki"), raw("bouba"), sb, sk)
+    beyond = np.mean(sk < lo) + np.mean(sb > hi)
+    print(f"anchor copies {ANCHOR_COPIES}: list words beyond the anchors {beyond / 2:.0%}")
+    print(f"raw scores: kiki {lo:.2f}, bouba {hi:.2f}; list medians kiki {np.median(sk):.2f}, bouba {np.median(sb):.2f}; "
+          f"curve exponents {gk:.2f} / {gb:.2f}")
+    pos = lambda w: position(raw(w), lo, mid, hi, gk, gb)
+    print("positions:", "  ".join(f"{w} {pos(w):.0f}" for w in ["bouba", "kiki", "maluma", "takete", "marshmallow", "lemon",
+          "Homer Simpson", "Road Runner", "jolly", "purr", "Wednesday Addams", "dolphin", "chair", "Monday"] if w in E))
+    print(f"general vocabulary: median {np.median([pos(w) for w in pool]):.0f}, "
+          f"beyond 90/10: {np.mean([(pos(w) > 90) | (pos(w) < 10) for w in pool]):.0%}; list words clipped: "
+          f"{np.mean([pos(w) in (0.0, 100.0) for w in BOUBA + KIKI]):.0%}")
+    for tname, rows in TESTS.items():
+        ok = [(pos(i) >= 50) == (lab == "bouba") for lab, i in rows]
+        print(f"held-out {tname}: {sum(ok)}/{len(ok)} | misses: "
+              + ", ".join(f"{i} ({lab}, {pos(i):.0f})" for (lab, i), k in zip(rows, ok) if not k))
+
+    out = {"model": MODEL, "method": "ridge regression on embeddings", "l2": l2,
+           "anchor_copies": ANCHOR_COPIES, "n_bouba": len(BOUBA), "n_kiki": len(KIKI), "cv_accuracy": round(cv[l2], 4),
+           "axis": [round(float(v), 7) for v in d],          # score = (e/|e|)·axis − divide_at ... see api/score.js
+           "kiki_at": lo - o, "divide_at": -o, "bouba_at": hi - o, "gamma_kiki": gk, "gamma_bouba": gb}
     with open(os.path.join(ROOT, "api", "_model.js"), "w") as f:
         f.write("// Generated by scripts/build_model.py — do not edit by hand.\nexport default " + json.dumps(out) + ";\n")
     print("wrote api/_model.js")

@@ -172,12 +172,14 @@
 <dialog id="about" aria-labelledby="about-title">
   <h2 id="about-title">How this works</h2>
   <p>
-    Each word is embedded with Google's gemini-embedding-2 and projected onto an axis anchored on
-    the words “bouba” and “kiki”, sharpened by 130 round, soft things and 130 sharp, spiky ones.
+    Bouba is soft, round, slow, warm and mellow; kiki is sharp, quick, bright, crisp and jittery. It's
+    about the whole vibe, not just the shape.
   </p>
   <p>
-    The number is where the word lands on that axis: “kiki” itself sits at 0, “bouba” at 100, and 50 is
-    the divide between the two lists. Held-out words land on the correct side 95% of the time.
+    Each word is embedded with Google's gemini-embedding-2, and a regression trained on about 770
+    hand-labelled things (foods, sounds, animals, characters, moods, objects) places it on a single axis.
+    “Kiki” itself sits at 0, “bouba” at 100, and 50 is the line between them. Held-out words land on
+    the correct side 95% of the time.
     It scores what the model associates with a word, which is not the same as how it sounds.
   </p>
   <form method="dialog"><button type="submit">Close</button></form>

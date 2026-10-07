@@ -1,136 +1,422 @@
-# Things that feel "kiki": spiky, sharp, angular, jagged, fast, crisp.
-# Deliberately includes harmless/pleasant kiki things to avoid a safe-vs-dangerous confound.
-# objects
-star
-crystal
-snowflake
-icicle
-origami
+# KIKI by vibe: sharp, quick, bright, high, light, crisp, nervous, witty, mischievous, precise.
+# Shape is one ingredient; sound, speed, taste, temperament and energy count too.
+# Pleasant and unpleasant entries are both included so the axis can't just learn "nice vs nasty".
+# temperament
+quick
+witty
+snappy
+zippy
+perky
+peppy
+spunky
+feisty
+bratty
+impish
+mischievous
+sly
+shrewd
+prickly
+edgy
+jittery
+twitchy
+nervy
+high-strung
+frantic
+hyper
+fidgety
+restless
+brisk
+keen
+alert
+precise
+meticulous
+clever
+sardonic
+snarky
+sassy
+acerbic
+caustic
+shrill
+strident
+manic
+electric
+sparkling
+giddy
+skittish
+zany
+# sounds and music
+click
+tick
+clink
+ping
+ding
+zap
+zing
+chirp
+tweet
+squeak
+screech
+shriek
+whistle
+beep
+crackle
+snap
+crunch
+sizzle
+hiss
+rattle
+jingle
+clatter
+piccolo
+violin pizzicato
+harpsichord
+glockenspiel
 triangle
-pyramid
-diamond
-gem
+hi-hat
+snare drum
+kazoo
+chiptune
+punk rock
+staccato
+# tastes and food
+vinegar
+wasabi
+horseradish
+chili pepper
+ginger
+peppermint
+sparkling water
+sherbet
+cranberry
+green apple
+kumquat
+radish
+celery
+pretzel
+potato chips
+rock candy
+sour candy
+pickle
+sour
+tangy
+zesty
+spicy
+fizzy
+crisp
+crunchy
+minty
+acidic
+# ways of moving
+dart
+zip
+zoom
+flit
+flick
+twitch
+jab
+poke
+prick
+skitter
+scurry
+scamper
+dash
+hop
+jitter
 zigzag
-lightning bolt
-spark
+swoop
+whip
+pounce
+ricochet
+flash
+flicker
+twinkle
+glint
+# textures and shapes
+spiky
+jagged
+pointy
+angular
+bristly
+thorny
+serrated
+brittle
+glassy
+metallic
+wiry
+bony
+lanky
+spindly
+scrawny
+pointed
+# weather and times
+lightning
+frost
+hail
+icicle
+crisp morning
+sleet
+static electricity
+glare
+rush hour
+# animals
+hummingbird
+wasp
+hornet
+mosquito
+cricket
+grasshopper
+weasel
+meerkat
+gecko
+praying mantis
+scorpion
+porcupine
+sea urchin
+swordfish
+heron
+magpie
+wren
+piranha
+barracuda
+flea
+# objects and places
+needle
+pin
+thumbtack
+razor
+scissors
+fork
+toothpick
+crystal
+glass shard
+star
 sparkler
 firework
 glitter
 tinsel
-pinwheel
-paper airplane
-arrowhead
-arrow
-dart
-pin
-needle
-thumbtack
-nail
+snowflake
+lightning bolt
 staple
-fork
-knife
-razor
-scissors
-saw blade
-shard
-splinter
-broken glass
+paperclip
 barbed wire
-spike
-thorn
-nettle
 cactus
-holly
-pine needle
-pine cone
 thistle
-burr
-antler
-horn
-beak
-claw
-fang
-icepick
-spear
-sword
-dagger
-toothpick
-skewer
-pencil
-compass
-tack
-comb
-crown
-tiara
-spire
-steeple
+holly
 skyscraper
-mountain peak
-crag
-cliff
-stalagmite
-quartz
-glacier
+spire
+neon sign
+stiletto heel
+tiara
+whisk
+cheese grater
+laser
+# colours
+neon green
+electric blue
+hot pink
+lime green
+chrome
+# characters
+Tinker Bell
+Sonic the Hedgehog
+Skeletor
+Cruella de Vil
+Maleficent
+Edward Scissorhands
+Pinhead
+Captain Hook
+Starscream
+Jack Skellington
+Wednesday Addams
+The Grinch
+Scrat
+Puck
+Rumpelstiltskin
+
+# ---- expansion (2026-10-07) ----
+# temperament
+sharp-witted
+quick-witted
+nimble
+agile
+frenetic
+pert
+cheeky
+tetchy
+irritable
+snippy
+curt
+terse
+brusque
+punctual
+exacting
+finicky
+fussy
+neurotic
+wired
+caffeinated
+vigilant
+piercing
+incisive
+spry
+sprightly
+frisky
+effervescent
+vivacious
+flighty
+mercurial
+# sounds and music
+tinkle
+plink
+ting
+clack
+tick-tock
+peep
+yip
+yap
+crack
+fizzle
+squeal
+squawk
+trill
+twang
+bleep
+whizz
+tin whistle
+recorder
+mandolin
+ukulele
+cymbal crash
+castanets
+tambourine
+music box
+synth arpeggio
+hyperpop
+speed metal
+ragtime
+bluegrass fiddle
+techno
+# tastes and food
+lemon
+lime
+sour cherry
+rhubarb
+pomegranate
+passion fruit
+kiwi
+jalapeño
+black pepper
+mustard
+pickled ginger
+sauerkraut
+kimchi
+salt and vinegar crisps
+sour gummy worms
+lemon drop
+cola
+tonic water
+crispbread
+rice cracker
+peppercorn
+star anise
+lemongrass
+# ways of moving
+spring
+leap
+hurtle
+scuttle
+fling
+snip
+slash
+prod
+jolt
+judder
+quiver
+shiver
+scramble
+dodge
+pirouette
+twirl
+# textures and shapes
+splintery
+crackly
+gritty
+scratchy
+crispy
+flinty
+steely
+icy
+frosty
+razor-sharp
+faceted
+crystalline
+geometric
+pixelated
+# weather and times
+thunderclap
+hailstorm
+cold snap
+frostbite
+high noon
+deadline
 # animals
-porcupine
-hedgehog
-sea urchin
-barracuda
-scorpion
-wasp
-hornet
-mosquito
-stag beetle
-swordfish
-narwhal
-lobster
-crab
-heron
-hummingbird
-cricket
-lizard
-stegosaurus
-# textures, qualities, adjectives
-sharp
-spiky
-pointy
-jagged
-angular
-prickly
-thorny
-spiny
-bristly
-crisp
-crunchy
-brittle
-craggy
-serrated
-barbed
-pointed
-edgy
-zippy
-twitchy
-jittery
-staccato
-shrill
-tinny
-fizzy
-zesty
-tangy
-tart
-snappy
-# sounds, music, misc
-click
-tick
-clink
-chirp
-squeak
-whistle
-snap
-crackle
-piccolo
-xylophone
-triangle chime
-hi-hat
-violin pizzicato
-sneeze
+firefly
+gnat
+hare
+gazelle
+cheetah
+greyhound
+whippet
+mongoose
+stoat
+shrew
+kingfisher
+swift
+swallow
+stick insect
+marlin
+cockatoo
+parakeet
+# objects and places
+dartboard
+arrow
+stapler
+safety pin
+fishhook
+nail
+saw
+chisel
+scalpel
+pen nib
+electric fence
+tin foil
+sequins
+rhinestone
+prism
+chandelier
+metronome
+stopwatch
+Eiffel Tower
+Gothic cathedral
+champagne flute
+# colours
+lemon yellow
+cyan
+magenta
+scarlet
+fluorescent orange
+# characters
+Stitch
+Jerry the mouse
+Daffy Duck
+Donald Duck
+Woody Woodpecker
+Tasmanian Devil
+Wile E. Coyote
+Beaker
+Sherlock Holmes
+Hermione Granger
+The Flash
+Quicksilver
+Rabbit from Winnie the Pooh
+Gremlins

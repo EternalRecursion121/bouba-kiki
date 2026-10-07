@@ -1,0 +1,37 @@
+# Obvious seeds for growing the clusters (from the user, plus a few in the same spirit). Format: label<TAB>item
+kiki	wasabi
+kiki	vinegar
+kiki	Bart Simpson
+kiki	Sonic the Hedgehog
+kiki	quick
+kiki	lemon
+kiki	lime
+kiki	pin
+kiki	wasp
+kiki	needle
+kiki	lightning
+kiki	piccolo
+kiki	Tinker Bell
+kiki	zap
+bouba	ball
+bouba	cloud
+bouba	mushroom
+bouba	dumpling
+bouba	egg
+bouba	igloo
+bouba	elephant
+bouba	cozy
+bouba	pillow
+bouba	tuba
+bouba	marshmallow
+bouba	Winnie the Pooh
+bouba	hippo
+bouba	porridge
+bouba	sloth
+# category balance: characters, foods and animals on both sides
+bouba	Totoro
+bouba	Snorlax
+bouba	mochi
+bouba	mashed potatoes
+kiki	hummingbird
+kiki	crisp

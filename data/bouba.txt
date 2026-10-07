@@ -1,136 +1,400 @@
-# Things that feel "bouba": round, soft, blobby, smooth, slow, mellow.
-# Deliberately includes unpleasant/dangerous bouba things to avoid a safe-vs-dangerous confound.
-# objects
-balloon
-pillow
-cushion
-beanbag
-bubble
-marshmallow
-blob
-sponge
-cotton ball
-pom-pom
-beach ball
-yoga ball
-dumpling
-donut
-bagel
-pebble
-boulder
-cannonball
-bowling ball
-wrecking ball
-bomb
-mushroom
-jelly
-pudding
-custard
-dough
-mochi
-bun
-muffin
-meatball
-blueberry
-grape
-peach
-plum
-melon
-pumpkin
-potato
-egg
-olive
-pearl
-bead
-marble
-globe
-moon
-planet
-cloud
-puddle
-dewdrop
-raindrop
-wave
-dune
-hill
-igloo
-dome
-bowl
-cauldron
-kettle
-teapot
-jar
-barrel
-blanket
-duvet
-mattress
-quilt
-mitten
-slipper
-teddy bear
-plushie
-lava lamp
-# animals
-hippo
-walrus
-manatee
-seal
-panda
-koala
-hamster
-blobfish
-jellyfish
-octopus
-whale
-slug
-snail
-toad
-pufferfish
-sheep
-bumblebee
-bear
-elephant
-# textures, qualities, adjectives
-round
-rounded
-soft
-plump
-chubby
-squishy
-fluffy
-puffy
-fuzzy
-velvety
-smooth
-curvy
-bulbous
-pillowy
-spongy
-gooey
-mushy
-doughy
-lumpy
-blobby
-bloated
-flabby
-sluggish
+# BOUBA by vibe: soft, round, slow, warm, low, heavy, mellow, comforting, easygoing, a bit dopey.
+# Shape is one ingredient; sound, speed, taste, temperament and energy count too.
+# Pleasant and unpleasant entries are both included so the axis can't just learn "nice vs nasty".
+# temperament
 mellow
-gentle
+easygoing
+laid-back
+sleepy
 drowsy
+dozy
+dopey
+gentle
+cuddly
 cozy
-muffled
-# sounds, music, misc
+snug
+placid
+serene
+languid
+lazy
+sluggish
+lethargic
+ponderous
+lumbering
+jolly
+jovial
+motherly
+soothing
+comforting
+dreamy
+mopey
+glum
+sulky
+melancholy
+mournful
+stodgy
+frumpy
+oafish
+sappy
+sentimental
+wholesome
+goofy
+bumbling
+smothering
+bloated
+# sounds and music
 hum
 murmur
+rumble
+thud
+boom
 gong
+coo
+purr
+mumble
+burble
+gurgle
+bloop
+plop
+moan
+groan
+lullaby
+foghorn
 tuba
 cello
-lullaby
-bass
-mumble
+double bass
+bassoon
+French horn
+didgeridoo
+pipe organ
+sousaphone
+timpani
+dub reggae
+lo-fi beats
+bossa nova
+smooth jazz
+slow jam
+# tastes and food
+butter
+cream
+custard
+porridge
+oatmeal
+mashed potatoes
+gravy
+pudding
+mochi
+dumpling
+marshmallow
+dough
+brioche
+risotto
+mac and cheese
+hot chocolate
+caramel
+honey
+banana
+avocado
+sweet potato
+pumpkin soup
+warm milk
+stew
+tofu
+cheesecake
+creamy
+buttery
+starchy
+mild
+# ways of moving
+amble
+waddle
+lumber
+wobble
+bounce
+roll
+float
+drift
+ooze
+plod
+mosey
+lounge
+snuggle
+nap
+slouch
+wallow
+sag
+squish
+bob
+sway
 yawn
-hug
-moldy
-mold
+snooze
+# textures and shapes
+soft
+plush
+fluffy
+velvety
+squishy
+spongy
+pillowy
+rounded
+padded
+mushy
+gooey
+flabby
+chubby
+plump
+rotund
+roly-poly
+bulbous
+lumpy
+blobby
+smooth
+# weather and times
+fog
+muggy
+overcast
+lazy Sunday
+siesta
+dusk
+sunset glow
+warm bath
+fireplace
+# animals
+hippo
+manatee
+panda
+sloth
+koala
+capybara
+cow
+sheep
+bear
+elephant
+whale
+dolphin
+seal
+wombat
+pug
+basset hound
+Saint Bernard
+toad
+snail
+slug
+blobfish
+hamster
+owl
+# objects and places
+pillow
+beanbag
+blanket
+duvet
+armchair
+sofa
+hammock
+bathtub
+hot tub
+balloon
+bubble
+bowl
+teapot
+slipper
+knitted sweater
+teddy bear
+lava lamp
+waterbed
+cloud
+puddle
 swamp
 bog
+meadow
+hobbit hole
+igloo
+boulder
+pebble
+moon
+# colours
+brown
+beige
+burgundy
+olive green
+mauve
+# characters
+Winnie the Pooh
+Totoro
+Baymax
+Snorlax
+Kirby
+Shrek
+Baloo
+Moomin
+Teletubbies
+Slimer
+Ursula
+Baron Harkonnen
+Mr. Blobby
+Stay Puft Marshmallow Man
+Barbapapa
+
+# ---- expansion (2026-10-07) ----
+# temperament
+tranquil
+unhurried
+contented
+groggy
+hazy
+woozy
+docile
+meek
+pudgy
+portly
+sullen
+lackadaisical
+unflappable
+gentle giant
+warm-hearted
+tender
+huggable
+snuggly
+# sounds and music
+bong
+thump
+whomp
+plonk
+blub
+glug
+drone
+croon
+snore
+burp
+euphonium
+contrabassoon
+upright bass
+Hammond organ
+ocarina
+ambient music
+lounge music
+doo-wop
+reggae
+Gregorian chant
+# tastes and food
+gnocchi
+polenta
+bao bun
+matzo ball
+meatball
+cinnamon roll
+donut
+muffin
+flan
+panna cotta
+rice pudding
+chocolate mousse
+chowder
+lasagna
+mozzarella
+brie
+gumdrop
+fudge
+nougat
+peach
+plum
+mango
+melon
+oat milk
+chai latte
+potato
+pumpkin
+butternut squash
+candy floss
+# ways of moving
+loll
+laze
+doze
+nestle
+cuddle
+flop
+trundle
+meander
+dawdle
+saunter
+# textures and shapes
+cushiony
+rubbery
+jiggly
+squashy
+cottony
+downy
+woolly
+fuzzy
+velour
+flannel
+fleece
+chenille
+marshmallowy
+# weather and times
+haze
+mist
+balmy
+lazy afternoon
+Sunday morning
+hibernation
+twilight
+snow day
+hot spring
+# animals
+sea lion
+beluga
+polar bear
+bison
+yak
+Newfoundland dog
+bulldog
+Persian cat
+guinea pig
+chinchilla
+dormouse
+marmot
+groundhog
+puffin
+dugong
+# objects and places
+cushion
+futon
+bubble bath
+hot water bottle
+onesie
+mitten
+earmuffs
+cocoon
+nest
+burrow
+bakery
+tea cozy
+snowman
+snowball
+bouncy castle
+blimp
+rubber ball
+# colours
+lavender
+dusty rose
+sage green
+terracotta
+pastel
+# characters
+Sulley from Monsters Inc
+Paddington Bear
+Hello Kitty
+Pusheen
+Clifford the Big Red Dog
+Mr. Snuffleupagus
+Cookie Monster
+Santa Claus
+Grogu
+Pumbaa
+Dumbo
+Mr. Potato Head
+Peppa Pig
+Miffy
+The Very Hungry Caterpillar
+Fat Albert

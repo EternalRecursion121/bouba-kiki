@@ -3,8 +3,9 @@ import model from "./_model.js";
 const WORD = /^[\p{L}\p{N}][\p{L}\p{M}\p{N}'’ .,-]{0,39}$/u;
 const cache = new Map(); // per-instance; the CDN cache header does most of the work
 
-// Position on the bouba–kiki axis, in two linear pieces: the word "kiki" sits at 0,
-// the divide between the bouba and kiki word lists at 50, and the word "bouba" at 100.
+// Position on the bouba–kiki axis learned by ridge regression (see scripts/build_model.py):
+// the word "kiki" sits at 0, the regression's decision boundary at 50, and "bouba" at 100.
+// Each half is bent by a power curve so the median training word lands at 25 / 75.
 export function position(embedding) {
   let norm = 0, dot = 0;
   for (let i = 0; i < embedding.length; i++) {
@@ -12,9 +13,9 @@ export function position(embedding) {
     dot += embedding[i] * model.axis[i];
   }
   const s = dot / Math.sqrt(norm);
-  const { kiki_at: lo, divide_at: mid, bouba_at: hi } = model;
-  const p = s < mid ? (50 * (s - lo)) / (mid - lo) : 50 + (50 * (s - mid)) / (hi - mid);
-  return Math.min(100, Math.max(0, p));
+  const { kiki_at: lo, divide_at: mid, bouba_at: hi, gamma_kiki: gk, gamma_bouba: gb } = model;
+  if (s < mid) return 50 - 50 * Math.min(1, (mid - s) / (mid - lo)) ** gk;
+  return 50 + 50 * Math.min(1, (s - mid) / (hi - mid)) ** gb;
 }
 
 export default async function handler(req, res) {

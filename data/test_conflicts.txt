@@ -1,0 +1,12 @@
+# Held-out shape-vs-vibe conflicts: the label follows the VIBE, not the outline. Format: label<TAB>item
+kiki	grapefruit
+kiki	ping pong ball
+kiki	disco ball
+kiki	alarm clock
+kiki	pop rocks
+kiki	soap bubble popping
+bouba	Patrick Star
+bouba	starfish
+bouba	brick of butter
+bouba	sleepy cube
+bouba	foam block

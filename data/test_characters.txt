@@ -1,0 +1,33 @@
+# Held-out fictional characters labelled by VIBE (never used in training). Format: label<TAB>name
+bouba	Homer Simpson
+bouba	Patrick Star
+bouba	Big Bird
+bouba	Eeyore
+bouba	Hagrid
+bouba	Chewbacca
+bouba	Garfield
+bouba	Barney the Dinosaur
+bouba	Po from Kung Fu Panda
+bouba	Fozzie Bear
+bouba	Gudetama
+bouba	Grimace
+bouba	Jabba the Hutt
+bouba	Pillsbury Doughboy
+bouba	Hamm from Toy Story
+bouba	Michelin Man
+bouba	Jigglypuff
+kiki	Road Runner
+kiki	Speedy Gonzales
+kiki	Tweety
+kiki	Scrappy-Doo
+kiki	Dexter from Dexter's Laboratory
+kiki	Peter Pan
+kiki	Mr. Burns
+kiki	Plankton
+kiki	Invader Zim
+kiki	Jafar
+kiki	Lisa Simpson
+kiki	Squidward
+kiki	Velma Dinkley
+kiki	Rocket Raccoon
+kiki	Ratatouille's Remy
